@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.mkyong.common</groupId>
-	<artifactId>RESTfulExample</artifactId>
+	
+	
+	<groupId>esub.maps.poc</groupId>
+	<artifactId>poc01.1-final</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>RESTfulExample Maven Webapp</name>
-	<url>http://maven.apache.org</url>
-
+	
 	<repositories>
 		<repository>
 			<id>JBoss repository</id>
@@ -20,6 +20,11 @@
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
 			<version>2.2.1.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>20030203.000129</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
