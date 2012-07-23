@@ -5,15 +5,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title></title>
 </head>
 <body>
-	<h2>Meus amigos do Facebook:</h2>
-	
+
+
+<a target="_top" href="/">
+	  		Home
+		</a><br/>
+<h2>Meus amigos do Twitter:</h2>
+
+<h3>${mensagem}</h3>
 	<ul>
 		<c:forEach items="${amigos}" var="amigo">
-			<li><c:out value="${amigo.id}" />  - <c:out value="${amigo.name}" /> </li>
+			<li><c:out value="${amigo.user.name}" />  - <c:out value="${amigo.text}" /> </li>
 		</c:forEach>
 	</ul>
+
 </body>
 </html>

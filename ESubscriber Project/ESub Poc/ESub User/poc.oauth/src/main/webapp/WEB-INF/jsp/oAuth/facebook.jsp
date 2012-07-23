@@ -8,6 +8,10 @@
 <title></title>
 </head>
 <body>
+		<a target="_top" href="/">
+	  		Home
+		</a><br/>
+
 	<h2>Meus amigos do Facebook:</h2>
 	
 	<ul>

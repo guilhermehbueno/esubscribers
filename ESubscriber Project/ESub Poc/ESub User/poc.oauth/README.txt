@@ -22,3 +22,11 @@ Para a autenticação no facebook deve-se seguir os seguintes passos:
 3 -  Caso esteja desenvolvendo pode informar a URL como localhost, ex: http://localhost:8080/teste/token/
 4 -  Após a autenticação o usuário será redirecionado para esta URL com o seu access_token informado, este token deverá ser reenviado a cada requisição do usuário
 
+
+Twitter:
+
+Para autenticação no Twitter deve-se seguir os seguintes passos:
+
+1 -  Cadastrar uma aplicação no twitter através do seguinte link: https://dev.twitter.com
+2 -  Na aplicação, enviar um post para solicitação de um token, de acordo com o link: https://dev.twitter.com/docs/api/1/post/oauth/request_token
+

@@ -20,9 +20,9 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 public class TesteController {
 	
 	private static final String TOKEN_URL = "https://graph.facebook.com/oauth/access_token?";
-	private static final String APP_ID="client_id=181926225207193&";
-	private static final String YOUR_REDIRECT_URI="redirect_uri=http://localhost:8080/teste/token&";
-	private static final String YOUR_APP_SECRET= "client_secret=a8d0dc676bce758bf2bec94ca96434f2&";
+	private static final String APP_ID="client_id=178743972258394&";
+	private static final String YOUR_REDIRECT_URI="redirect_uri=http://localhost:8080/oauth/twitter&";
+	private static final String YOUR_APP_SECRET= "client_secret=c17c70d144a1354df1525e5d32212447&";
 	private static final String FRIENDS = "https://graph.facebook.com/me/friends?";
 	private final Result result;
 	
@@ -43,7 +43,6 @@ public class TesteController {
 				System.out.println("Amigo: "+data.getId()+ " - "+ data.getName());
 			}
 			this.result.include("amigos", amigos);
-			this.result.include("mensagem", "Deu certo?");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
