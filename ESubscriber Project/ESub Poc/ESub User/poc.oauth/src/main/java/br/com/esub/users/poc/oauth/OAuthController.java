@@ -26,6 +26,8 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.esub.users.poc.oauth.facebook.Data;
 import br.com.esub.users.poc.oauth.facebook.Friends;
+import br.com.esub.users.poc.oauth.google.GoogleConstants;
+import br.com.esub.users.poc.oauth.google.UserInfo;
 
 @Resource()
 @Path("oauth")
@@ -36,6 +38,7 @@ public class OAuthController {
 	private static final String YOUR_REDIRECT_URI="redirect_uri=http://localhost:8080/oauth/facebook&";
 	private static final String YOUR_APP_SECRET= "client_secret=c17c70d144a1354df1525e5d32212447&";
 	private static final String FRIENDS = "https://graph.facebook.com/me/friends?";
+	private static final String URL_GOOGLE_INFO="https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
 
 	private final HttpServletRequest request;
 	private final Result result;
@@ -107,20 +110,13 @@ public class OAuthController {
 		}
 	}
 
-	public void google() {
-
-	}
-	
-	
-	private String sendRequestPost(String request, String uri) throws IOException, HttpException {
-		System.out.println("Enviando um Post: "+uri);
-		PostMethod method = new PostMethod(uri);
-		try {
-			new HttpClient().executeMethod(method);
-			return new String(method.getResponseBody(),"UTF-8");
-		} finally {
-		method.releaseConnection();
-		}
+	@Path("google")
+	public void google(String state, String code) {
+		System.out.println("request: "+request.getRequestURL());
+		System.out.println("Token recebido: "+state);
+		System.out.println("state: "+state);
+		System.out.println("code: "+code);
+		getGoogleAccessToken(code, state);
 	}
 	
 	private Friends getFriends(String accessToken){
@@ -142,5 +138,46 @@ public class OAuthController {
 			e.printStackTrace();
 		}
 		return resultado;
+	}
+	
+	public void getGoogleAccessToken(String code, String state){
+		String url = GoogleConstants.montarUrlParaAccessToken(code);
+		try {
+			ClientRequest request = new ClientRequest("https://accounts.google.com/o/oauth2/token");
+			request.accept("application/x-www-form-urlencoded");
+			
+			String data = "client_id=298758427991-76iaupg0c9upsma5dgil3d6k1h6akjmf.apps.googleusercontent.com&client_secret=PTT_cgqmIW6pU2hGWqsJiwXy&code="+code+"&grant_type=authorization_code";
+			request.body("application/x-www-form-urlencoded", data);
+			String load =  (String) request.post().getEntity(String.class);
+			System.out.println(load);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void getGoogleUserInfo(String accessToken){
+		System.out.println("Access Token: "+accessToken);
+		try {
+			ClientRequest request = new ClientRequest(URL_GOOGLE_INFO+accessToken);
+			request.accept("application/x-www-form-urlencoded");
+			String load =  (String) request.get().getEntity(String.class);
+			System.out.println(load);
+			XStream xstream = new XStream(new JettisonMappedXmlDriver());
+			UserInfo userInfo = (UserInfo) xstream.fromXML(load);
+			System.out.println(userInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String sendRequestPost(String request, String uri) throws IOException, HttpException {
+		System.out.println("Enviando um Post: "+uri);
+		PostMethod method = new PostMethod(uri);
+		try {
+			new HttpClient().executeMethod(method);
+			return new String(method.getResponseBody(),"UTF-8");
+		} finally {
+		method.releaseConnection();
+		}
 	}
 }

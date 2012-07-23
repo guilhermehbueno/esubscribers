@@ -13,6 +13,11 @@
 	  		Logar pelo Twitter
 		</a>
 	</li>
+	<li>
+		<a target="_top" href="https://accounts.google.com/o/oauth2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&state=%2Fprofile&redirect_uri=http://localhost:8080/oauth/google&response_type=code&client_id=298758427991-76iaupg0c9upsma5dgil3d6k1h6akjmf.apps.googleusercontent.com">
+	  		Logar pelo Google
+		</a>
+	</li>
 </ul>
 </body>
 </html>
