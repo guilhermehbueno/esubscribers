@@ -1,130 +1,79 @@
 package br.com.esub.users.poc.oauth;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.jboss.resteasy.client.ClientRequest;
+
+import twitter4j.Status;
+import twitter4j.Twitter;
+import br.com.caelum.vraptor.Path;
+import br.com.caelum.vraptor.Resource;
+import br.com.caelum.vraptor.Result;
+import br.com.esub.users.poc.facebook.model.Data;
+import br.com.esub.users.poc.facebook.model.Friends;
+import br.com.esub.users.poc.google.model.UserInfo;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
-import twitter4j.conf.ConfigurationBuilder;
-import br.com.caelum.vraptor.Path;
-import br.com.caelum.vraptor.Resource;
-import br.com.caelum.vraptor.Result;
-import br.com.esub.users.poc.oauth.facebook.Data;
-import br.com.esub.users.poc.oauth.facebook.Friends;
-import br.com.esub.users.poc.oauth.google.GoogleConstants;
-import br.com.esub.users.poc.oauth.google.UserInfo;
-
 @Resource()
 @Path("oauth")
 public class OAuthController {
-	
-	private static final String TOKEN_URL = "https://graph.facebook.com/oauth/access_token?";
-	private static final String APP_ID="client_id=178743972258394&";
-	private static final String YOUR_REDIRECT_URI="redirect_uri=http://localhost:8080/oauth/facebook&";
-	private static final String YOUR_APP_SECRET= "client_secret=c17c70d144a1354df1525e5d32212447&";
+
+	private final OAuthUserTokens tokens;
 	private static final String FRIENDS = "https://graph.facebook.com/me/friends?";
-	private static final String URL_GOOGLE_INFO="https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
+	private static final String URL_GOOGLE_INFO = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
 
 	private final HttpServletRequest request;
 	private final Result result;
 
-	public OAuthController(HttpServletRequest request, Result result) {
+	public OAuthController(HttpServletRequest request, Result result, OAuthUserTokens tokens) {
 		super();
 		this.request = request;
 		this.result = result;
+		this.tokens = tokens;
 	}
 
-	public void facebook(String code) {
+	public void facebook() {
 		try {
-			System.out.println("Code recebido: "+code);
-			String chamada = TOKEN_URL+APP_ID+YOUR_REDIRECT_URI+YOUR_APP_SECRET+"code="+code;
-			String acessToken = sendRequestPost(null, chamada);
-			System.out.println("Access Token recebido: "+acessToken);
-			Friends friends = getFriends(acessToken);
+			OAuthToken token= this.tokens.getTokenByName("facebook");
+			System.out.println("Access Token recebido: " + token.getToken());
+			Friends friends = getFriends(token.getToken());
 			List<Data> amigos = friends.getData();
 			for (Data data : amigos) {
-				System.out.println("Amigo: "+data.getId()+ " - "+ data.getName());
+				System.out.println("Amigo: " + data.getId() + " - "+ data.getName());
 			}
 			this.result.include("amigos", amigos);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void twitter() throws Exception {
-		HttpSession session = this.request.getSession();
-		if(session.getAttribute("twitter")==null){
-			Twitter twitter = new TwitterFactory().getInstance();
-	        twitter.setOAuthConsumer("cKkKXl66vjmGzSfRm6YAYg", "GXdzt0ScXml6F0HZV4Zi5nlU5IJSNXlBwcT4QR8Uc");
-	        System.out.println("Instanciando twitter com : "+twitter);
-			
-	        System.out.println("Solicitando request token...");
-			RequestToken requestToken = twitter.getOAuthRequestToken();
-			System.out.println("requestToken recebido: "+requestToken);
-			
-			request.getSession().setAttribute("requestToken", requestToken);
-			request.getSession().setAttribute("twitter", twitter);
-			System.out.println("requestToken.getAuthenticationURL(): "+ requestToken.getAuthenticationURL());
-			result.redirectTo(requestToken.getAuthenticationURL());
-		}else{
-			Twitter twitter = (Twitter) session.getAttribute("twitter");
-			RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
-			
-			if(requestToken==null){
-				request.getSession().setAttribute("twitter", null);
-				result.redirectTo("/oauth/twitter");
-			}
-			System.out.println("RequestToken: "+requestToken);
-	        String verifier = request.getParameter("oauth_verifier");
-	        
-	        if(verifier==null){
-	        	request.getSession().setAttribute("twitter", null);
-				result.redirectTo("/oauth/twitter");
-	        }
-	        
-	        System.out.println("verifier: "+verifier);
-	        twitter.getOAuthAccessToken(requestToken, verifier);
-	        request.getSession().removeAttribute("requestToken");
-			
-			List<Status> statuses = twitter.getHomeTimeline();
-			System.out.println("Showing friends timeline.");
-			for (Status status : statuses) {
-			     System.out.println(status.getUser().getName() + ":" +status.getText());
-			}
-			this.result.include("amigos", statuses);
+		Twitter twitter = (Twitter) this.request.getSession().getAttribute("twitter");
+		List<Status> statuses = twitter.getHomeTimeline();
+		System.out.println("Showing friends timeline.");
+		for (Status status : statuses) {
+			System.out.println(status.getUser().getName() + ":"+ status.getText());
 		}
+		this.result.include("amigos", statuses);
 	}
 
-	@Path("google")
-	public void google(String state, String code) {
-		System.out.println("request: "+request.getRequestURL());
-		System.out.println("Token recebido: "+state);
-		System.out.println("state: "+state);
-		System.out.println("code: "+code);
-		getGoogleAccessToken(code, state);
+	public void google() {
+		UserInfo userInfo = getGoogleUserInfo(this.tokens.getTokenByName("google"));
+		this.result.include("userInfo", userInfo);
 	}
-	
-	private Friends getFriends(String accessToken){
-		System.out.println("Access Token: "+accessToken);
+
+	private Friends getFriends(String accessToken) {
+		System.out.println("Access Token: " + accessToken);
 		Friends resultado = new Friends();
 		try {
-			ClientRequest request = new ClientRequest(FRIENDS+accessToken);
-			String load =  (String) request.get().getEntity(String.class);
+			ClientRequest request = new ClientRequest(FRIENDS + accessToken);
+			String load = (String) request.get().getEntity(String.class);
 			System.out.println(load);
 			XStream xstream = new XStream(new JettisonMappedXmlDriver());
 			xstream.alias("data", Data.class);
@@ -139,45 +88,19 @@ public class OAuthController {
 		}
 		return resultado;
 	}
-	
-	public void getGoogleAccessToken(String code, String state){
-		String url = GoogleConstants.montarUrlParaAccessToken(code);
+
+	public UserInfo getGoogleUserInfo(OAuthToken token) {
+		System.out.println("Access Token: " + token.getToken());
 		try {
-			ClientRequest request = new ClientRequest("https://accounts.google.com/o/oauth2/token");
+			ClientRequest request = new ClientRequest(URL_GOOGLE_INFO+token.getToken());
 			request.accept("application/x-www-form-urlencoded");
-			
-			String data = "client_id=298758427991-76iaupg0c9upsma5dgil3d6k1h6akjmf.apps.googleusercontent.com&client_secret=PTT_cgqmIW6pU2hGWqsJiwXy&code="+code+"&grant_type=authorization_code";
-			request.body("application/x-www-form-urlencoded", data);
-			String load =  (String) request.post().getEntity(String.class);
+			UserInfo load = (UserInfo) request.get().getEntity(UserInfo.class);
 			System.out.println(load);
+			return load;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
-	
-	public void getGoogleUserInfo(String accessToken){
-		System.out.println("Access Token: "+accessToken);
-		try {
-			ClientRequest request = new ClientRequest(URL_GOOGLE_INFO+accessToken);
-			request.accept("application/x-www-form-urlencoded");
-			String load =  (String) request.get().getEntity(String.class);
-			System.out.println(load);
-			XStream xstream = new XStream(new JettisonMappedXmlDriver());
-			UserInfo userInfo = (UserInfo) xstream.fromXML(load);
-			System.out.println(userInfo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private String sendRequestPost(String request, String uri) throws IOException, HttpException {
-		System.out.println("Enviando um Post: "+uri);
-		PostMethod method = new PostMethod(uri);
-		try {
-			new HttpClient().executeMethod(method);
-			return new String(method.getResponseBody(),"UTF-8");
-		} finally {
-		method.releaseConnection();
-		}
-	}
+
 }
