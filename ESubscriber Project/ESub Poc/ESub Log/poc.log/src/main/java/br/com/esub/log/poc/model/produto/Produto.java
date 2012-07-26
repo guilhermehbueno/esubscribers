@@ -4,6 +4,7 @@ public class Produto {
 	
 	private String id;
 	private String nome;
+	private String preco;
 	
 	public Produto(String id, String nome) {
 		super();
@@ -26,5 +27,13 @@ public class Produto {
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getPreco() {
+		return preco;
+	}
+
+	public void setPreco(String preco) {
+		this.preco = preco;
 	}
 }

@@ -11,6 +11,7 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.ioc.SessionScoped;
+import br.com.esub.client.poc.model.Preview;
 import br.com.esub.client.poc.model.Produto;
 
 @Resource
@@ -61,11 +62,11 @@ public class ProdutoController {
 	public void preview(String idProduto){
 		System.out.println("produto/preview/"+idProduto);
 		try {
-			ClientRequest request = new ClientRequest("http://localhost:8080/plataform/rest/entrega/preview");
+			ClientRequest request = new ClientRequest("http://localhost:8080/plataform/rest/entrega/preview?token="+UUID.randomUUID().toString()+"&produto="+idProduto);
 			System.out.println(request.get().getEntity(String.class));
-			ClientResponse<String> response = request.get(String.class);
+			ClientResponse<Preview> response = request.get(Preview.class);
 			System.out.println(response.getEntity());
-			this.result.include("retorno", response.getEntity());
+			this.result.include("preview", response.getEntity());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
