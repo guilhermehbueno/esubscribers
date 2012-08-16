@@ -1,0 +1,7 @@
+<% if current_user %>
+	<ul>
+		<% for friend in @friends %>
+			<li><img src ="http://graph.facebook.com/<%= friend['id'] %>/picture" /><%= friend['id'] %> => <%= friend['name'] %></li>
+		<% end %>
+	</ul>
+<% end %>
