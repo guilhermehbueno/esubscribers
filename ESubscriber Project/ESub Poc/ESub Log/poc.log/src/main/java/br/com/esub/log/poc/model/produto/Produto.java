@@ -6,6 +6,8 @@ public class Produto {
 	private String nome;
 	private String preco;
 	
+	private Fornecedor fornecedor;
+	
 	public Produto(String id, String nome) {
 		super();
 		this.id = id;
@@ -14,6 +16,14 @@ public class Produto {
 	
 	public Produto() {
 		super();
+	}
+
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
 	}
 
 	public String getId() {

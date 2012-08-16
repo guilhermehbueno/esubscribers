@@ -35,6 +35,19 @@
 			<artifactId>resteasy-jaxb-provider</artifactId>
 			<version>2.3.4.Final</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jettison-provider</artifactId>
+			<version>2.3.4.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>2.3.4.Final</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>poc.log</finalName>
@@ -57,11 +70,14 @@
 					<scanIntervalSeconds>10</scanIntervalSeconds>
 					<contextHandlers>
 						<contextHandler implementation="org.eclipse.jetty.webapp.WebAppContext">
-							<war>/home/tr_gbueno/projetos/meus/esubscribers/ESubscriber Project/ESub Poc/ESub Plataform/poc.plataform/target/poc.plataform.war</war>
+							<war>/home/tr_gbueno/projetos/meus/esubscribers/ESubscriber
+								Project/ESub Poc/ESub
+								Plataform/poc.plataform/target/poc.plataform.war</war>
 							<contextPath>/plataform</contextPath>
 						</contextHandler>
 						<contextHandler implementation="org.eclipse.jetty.webapp.WebAppContext">
-							<war>/home/tr_gbueno/projetos/meus/esubscribers/ESubscriber Project/ESub Poc/ESub Log/poc.client/target/poc.client.war</war>
+							<war>/home/tr_gbueno/projetos/meus/esubscribers/ESubscriber
+								Project/ESub Poc/ESub Log/poc.client/target/poc.client.war</war>
 							<contextPath>/client</contextPath>
 						</contextHandler>
 					</contextHandlers>
