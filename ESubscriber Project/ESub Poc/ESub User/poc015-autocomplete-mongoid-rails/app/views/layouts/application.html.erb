@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for?(:title) ? yield(:title) : "Untitled" %></title>
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_include_tag :application %>
+
+    <%= csrf_meta_tag %>
+    <%= yield(:head) %>
+
+
+
+
+
+  <!-- AUTOCOMPLETE -->
+  <script>
+  $(function() {
+    function log( message ) {
+      $( "<div/>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }
+
+    $( "#birds" ).autocomplete({
+      source: "http://localhost:3000/welcome/autocomplete_brand_name.json",
+      minLength: 2,
+      select: function( event, ui ) {
+        log( ui.item ? "Selected: " + ui.item + " aka " + ui.item.id : "Nothing selected, input was " + this.value );
+      }
+    });
+  });
+  </script>
+  <!-- AUTOCOMPLETE -->
+
+
+  </head>
+  <body>
+    <div id="container">
+      <% flash.each do |name, msg| %>
+        <%= content_tag :div, msg, :id => "flash_#{name}" %>
+      <% end %>
+      <%= content_tag :h1, yield(:title) if show_title? %>
+      <%= yield %>
+    </div>
+  </body>
+</html>
