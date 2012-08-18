@@ -21,7 +21,7 @@
 			source: function( request, response ) {
 				$.ajax({
 					url: "http://localhost:3000/welcome/autocomplete_brand_name.json",
-					dataType: "json",
+					dataType: "jsonp",
 					data: {
 						featureClass: "P",
 						style: "full",
