@@ -8,28 +8,13 @@
     <%= javascript_include_tag :application %>
     <%= javascript_include_tag :autocomplete_facebook %>
     <%= csrf_meta_tags %>
-
-    
+    <%= stylesheet_link_tag "autocomplete_facebook", :media => "all" %>
     <%= stylesheet_link_tag "application", :media => "all" %>
-
-  
     <%= favicon_link_tag 'images/apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144' %>
-
-   
-    <%= favicon_link_tag 'images/apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114' %>
-
-    
+    <%= favicon_link_tag 'images/apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114' %>    
     <%= favicon_link_tag 'images/apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72' %>
-
-   
     <%= favicon_link_tag 'images/apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png' %>
-
-   
     <%= favicon_link_tag 'images/favicon.ico', :rel => 'shortcut icon' %>
-
-
-
-
 
 
   </head>
@@ -58,40 +43,20 @@
     <div class="container">
       <div class="content">
         <div class="row">
-           <div class="span9">
-
-
-
-	<div id="user_nav">
-  <% if current_user %>
-    Signed in as <strong><%= current_user.name %></strong>!
-    <%= link_to "Sign out", signout_path, id: "sign_out" %>
-  <% else %>
-    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
-  <% end %>
-</div>
-
-
-
-
+           <div class="span12">
+		<div id="user_nav">
+		  <% if current_user %>
+		    Signed in as <strong><%= current_user.name %></strong>!
+		    <%= link_to "Sign out", signout_path, id: "sign_out" %>
+		  <% else %>
+		    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
+		  <% end %>
+		</div>
               <%= yield %>
-            </div>
-            <div class="span3">
-              <div class="well sidebar-nav">
-                <h3>Sidebar</h3>
-                <ul class="nav nav-list">
-                  <li class="nav-header">Sidebar</li>
-                  <li><%= link_to "Link1", "/path1"  %></li>
-                  <li><%= link_to "Link2", "/path2"  %></li>
-                  <li><%= link_to "Link3", "/path3"  %></li>
-                </ul>
-              </div><!--/.well -->
-            </div><!--/span-->
-        </div><!--/row-->
-      </div><!--/content-->
-
-     </div> <!-- /container -->
-
+         </div>
+        </div>
+      </div>
+     </div> 
     <!-- Javascripts
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

@@ -1,11 +1,20 @@
-<h1>Autocomplete com amigos</h1>
-
 <%= form_tag do %>
 
-<div class="ui-widget">
+<div class="row">
+<div class="span4">
+	<div class="row well">
+	<h2>Selecione seus amigos</h2>
+	<input id="project"/>
+	</div>
+</div>
 
-<input id="project"/>
-	<input type="hidden" id="project-id"/>
-	<p id="project-description"></p>
+<div class="offset2 span6">
+	<div class="row well">
+		<h2>Amigos selecionados</h2>
+		<ul class="amigos_selecionados">
+		</ul>
+	</div>
+</div>
+
 </div>
 <% end %>

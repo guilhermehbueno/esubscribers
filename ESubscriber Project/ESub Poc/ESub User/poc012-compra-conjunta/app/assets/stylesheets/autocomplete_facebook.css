@@ -1,0 +1,19 @@
+.autocomplete_facebook{
+	margin: 3px;
+	width: 200px;
+	margin-bottom: 5px;
+	background-color: whiteSmoke;
+	border: 1px solid #EEE;
+}
+
+.ui-menu-item{
+	list-style: none;
+}
+
+.amigos_selecionados{
+	list-style: none;
+}
+
+#project{
+	width: 200px;
+}

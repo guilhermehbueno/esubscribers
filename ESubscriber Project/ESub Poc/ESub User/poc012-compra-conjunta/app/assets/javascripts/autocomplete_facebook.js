@@ -1,5 +1,6 @@
 $(function() {
-		$( "#project" ).autocomplete({
+  $( "#project" )
+    .autocomplete({
 			source: function( request, response ) {
 				$.ajax({
 					url: "http://localhost:3000/welcome/autocomplete_friend_name.json",
@@ -11,7 +12,6 @@ $(function() {
 						name_startsWith: request.term
 					},
 					success: function( data ) {
-					console.log("Sucesso")
 						response( $.map( data, function( item ) {
 							return {
 								label: item.name,
@@ -22,12 +22,20 @@ $(function() {
 					}
 				});
 			},
-			minLength: 3			
-		}).data( "autocomplete" )._renderItem = function( ul, item ) {
-			return $( "<li></li>" )
-				.data( "item.autocomplete", item )
-				.append( 
-"<a><img src =http://graph.facebook.com/"+item.id_social+"/picture />" + item.label + "<br>" + item.value + "</a>" )
-				.appendTo( ul );
+			minLength: 3,
+			select: function( event, ui ) {
+					  console.log("Selecionado o item: "+ui.item.label )
+					  $(".amigos_selecionados")
+					  .append("<li><img src =http://graph.facebook.com/"+ui.item.id_social+"/picture />"+ui.item.label+"</li>")
+				    return false;
+			  }
+		})
+		
+		.data( "autocomplete" )
+		._renderItem = function( ul, item ) {
+		  return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append("<a><div class='autocomplete_facebook'><img src =http://graph.facebook.com/"+item.id_social+"/picture />" + item.label + "<br>" + item.value + "</div></a>")
+        .appendTo( ul );
 		};
 	});
