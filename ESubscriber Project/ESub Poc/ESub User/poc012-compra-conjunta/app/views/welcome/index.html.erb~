@@ -1,2 +1,13 @@
-<h1>Welcome#index</h1>
+<h1>Autocomplete com amigos</h1>
 <p>Find me in app/views/welcome/index.html.erb</p>
+
+
+<%= form_tag do %>
+
+<div class="ui-widget">
+
+<input id="project"/>
+	<input type="hidden" id="project-id"/>
+	<p id="project-description"></p>
+</div>
+<% end %>
