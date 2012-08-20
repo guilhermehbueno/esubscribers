@@ -5,6 +5,73 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+
+
+
+
+
+
+
+<script>
+	$(function() {
+		function log( message ) {
+			$( "<div/>" ).text( message ).prependTo( "#log" );
+			$( "#log" ).scrollTop( 0 );
+		}
+
+		$( "#birds" ).autocomplete({
+			source: function( request, response ) {
+				$.ajax({
+					url: "http://localhost:3000/welcome/autocomplete_friend_name.json",
+					dataType: "json",
+					data: {
+						featureClass: "P",
+						style: "full",
+						maxRows: 12,
+						name_startsWith: request.term
+					},
+					success: function( data ) {
+					console.log("Sucesso")
+						response( $.map( data, function( item ) {
+							return {
+								label: item.name,
+								value: item.name
+							}
+						}));
+					}
+				});
+			},
+			minLength: 3,
+			select: function( event, ui ) {
+				log( ui.item ?
+					"Selected: " + ui.item.label :
+					"Nothing selected, input was " + this.value);
+			},
+			open: function() {
+				$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+			},
+			close: function() {
+				$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+			}
+		});
+	});
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </head>
 <body>
 
